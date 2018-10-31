@@ -19,7 +19,7 @@ namespace POLiftWcfWebRole.Models
         public string Description { get; set; }
 
         [DataMember]
-        public string DownloadUrl { get; set; }
+        public string FileName { get; set; }
 
         public LiftingProgram()
         {
@@ -38,7 +38,7 @@ namespace POLiftWcfWebRole.Models
 
             return Title == lp.Title &&
                 Description == lp.Description &&
-                DownloadUrl == lp.DownloadUrl;
+                FileName == lp.FileName;
         }
 
         // override object.GetHashCode
@@ -46,7 +46,7 @@ namespace POLiftWcfWebRole.Models
         {
             // TODO: write your implementation of GetHashCode() here
             return Title.GetHashCode() ^ Description.GetHashCode() ^
-                DownloadUrl.GetHashCode();
+                FileName.GetHashCode();
         }
 
         public static bool operator ==(LiftingProgram obj1, LiftingProgram obj2)
@@ -63,7 +63,7 @@ namespace POLiftWcfWebRole.Models
 
             return obj1.Title == obj2.Title &&
                 obj1.Description == obj2.Description &&
-                obj1.DownloadUrl == obj2.DownloadUrl;
+                obj1.FileName == obj2.FileName;
         }
 
 

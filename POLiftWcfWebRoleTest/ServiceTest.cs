@@ -5,6 +5,7 @@ using POLiftWcfWebRole.Database;
 using POLiftWcfWebRole.Models;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 
 namespace POLiftWcfWebRoleTest
 {
@@ -20,25 +21,25 @@ namespace POLiftWcfWebRoleTest
                 {
                     Title="3-day-per-week Push/Pull/Legs, imperial weights (US/Canada)",
                     Description="",
-                    DownloadUrl="3d-imperial.db3"
+                    FileName="3d-imperial.db3"
                 },
                 new LiftingProgram()
                 {
                     Title="5-day-per-week, imperial weights (US/Canada)",
                     Description="",
-                    DownloadUrl="5d-imperial.db3"
+                    FileName="5d-imperial.db3"
                 },
                 new LiftingProgram()
                 {
                     Title="3-day-per-week Push/Pull/Legs, metric weights",
                     Description="",
-                    DownloadUrl="3d-metric.db3"
+                    FileName="3d-metric.db3"
                 },
                 new LiftingProgram()
                 {
                     Title="5-day-per-week, metric weights",
                     Description="",
-                    DownloadUrl="5d-metric.db3"
+                    FileName="5d-metric.db3"
                 }
             };
 
@@ -75,7 +76,7 @@ namespace POLiftWcfWebRoleTest
         }
 
         [TestMethod]
-        public void TimeLeftInTrialInner()
+        public void TimeLeftInTrialOrStartRegistration_Existing()
         {
             string deviceId = "test_device_id";
             
@@ -93,9 +94,28 @@ namespace POLiftWcfWebRoleTest
             dbContext.SaveChanges();
             Service service = new Service(dbContext);
 
-            TimeSpan trialRemaining = service.TimeLeftInTrialInner(deviceId);
+            TimeSpan trialRemaining = service.TimeLeftInTrialOrStartRegistration(deviceId);
 
             Assert.IsTrue(expected - trialRemaining < TimeSpan.FromSeconds(1));
+        }
+
+        [TestMethod]
+        public void TimeLeftInTrialOrStartRegistration_New()
+        {
+            string deviceId = "test_device_id";
+
+            DatabaseContext dbContext = new DatabaseContext(
+                Effort.DbConnectionFactory.CreateTransient(), true);
+
+            dbContext.DeviceRegistrations.Add(
+                new DeviceRegistration("other_random_device", DateTime.Now - TimeSpan.FromDays(10)));
+            dbContext.SaveChanges();
+            Service service = new Service(dbContext);
+
+            TimeSpan trialRemaining = 
+                service.TimeLeftInTrialOrStartRegistration(deviceId);
+
+            Assert.IsTrue(TimeSpan.FromDays(14) - trialRemaining < TimeSpan.FromSeconds(1));
         }
 
         [TestMethod]
@@ -111,6 +131,18 @@ namespace POLiftWcfWebRoleTest
 
             Assert.AreEqual(expected, trialRemaining);
 
+        }
+
+        [TestMethod]
+        public void DownloadLiftingProgram()
+        {
+            string fileName = "5d-imperial.db3";
+
+            Service service = new Service();
+            Stream stream = 
+                service.DownloadLiftingProgram(fileName);
+            Assert.IsTrue(stream.Length > 10);
+            System.Diagnostics.Debug.WriteLine("stream.Length" + stream.Length);
         }
     }
 }

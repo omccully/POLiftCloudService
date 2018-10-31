@@ -4,12 +4,14 @@ using POLiftWcfWebRole.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Web.Hosting;
 
 namespace POLiftWcfWebRole
 {
@@ -64,6 +66,28 @@ namespace POLiftWcfWebRole
                 .Select(lp => lp.ToLiftingProgram()).ToArray();
         }
 
+        public Stream DownloadLiftingProgram(string fileName)
+        {
+            string programsRelativePath = "App_Data";
+            string downloadFilePath =
+                Path.Combine(programsRelativePath, fileName);
+
+            WebOperationContext context = WebOperationContext.Current;
+            if(context != null)
+            {
+                downloadFilePath =
+                    Path.Combine(HostingEnvironment.MapPath("~/" + programsRelativePath),
+                    fileName);
+
+                string headerInfo = "attachment; filename=" + fileName;
+                context.OutgoingResponse.Headers["Content-Disposition"] = headerInfo;
+                context.OutgoingResponse.ContentType = "application/octet-stream";
+            }
+
+            return File.OpenRead(downloadFilePath);
+        }
+
+        #region trial period
         TimeSpan TrialPeriod = TimeSpan.FromDays(14);
 
         public TimeSpan TimeLeftInTrialFromDateTime(DateTime time, DateTime? now = null)
@@ -77,10 +101,10 @@ namespace POLiftWcfWebRole
         {
             LogRegistrationLookup(deviceId, GetClientIp());
 
-            return TimeLeftInTrialInner(deviceId);
+            return TimeLeftInTrialOrStartRegistration(deviceId);
         }
 
-        public TimeSpan TimeLeftInTrialInner(string deviceId)
+        public TimeSpan TimeLeftInTrialOrStartRegistration(string deviceId)
         {
             var matches = DatabaseContext
                 .DeviceRegistrations.Where(
@@ -91,6 +115,8 @@ namespace POLiftWcfWebRole
             if (existingRegistration == null)
             {
                 existingRegistration = new DeviceRegistration(deviceId, DateTime.Now);
+                DatabaseContext.DeviceRegistrations.Add(existingRegistration);
+                DatabaseContext.SaveChangesAsync();
             }
 
             return TimeLeftInTrialFromDateTime(existingRegistration.Time);
@@ -119,5 +145,6 @@ namespace POLiftWcfWebRole
             }
             return address;
         }
+        #endregion
     }
 }

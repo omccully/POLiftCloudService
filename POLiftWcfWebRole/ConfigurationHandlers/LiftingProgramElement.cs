@@ -23,11 +23,11 @@ namespace POLiftWcfWebRole.ConfigurationHandlers
             set { base["description"] = value; }
         }
 
-        [ConfigurationProperty("downloadUrl", IsRequired = true)]
-        public string DownloadUrl
+        [ConfigurationProperty("fileName", IsRequired = true)]
+        public string FileName
         {
-            get { return base["downloadUrl"] as string; }
-            set { base["downloadUrl"] = value; }
+            get { return base["fileName"] as string; }
+            set { base["fileName"] = value; }
         }
 
         public LiftingProgramElement()
@@ -41,7 +41,7 @@ namespace POLiftWcfWebRole.ConfigurationHandlers
             {
                 Title = this.Title,
                 Description = this.Description,
-                DownloadUrl = this.DownloadUrl
+                FileName = this.FileName
             };
         }
 
@@ -57,7 +57,7 @@ namespace POLiftWcfWebRole.ConfigurationHandlers
 
             return Title == lp.Title &&
                 Description == lp.Description &&
-                DownloadUrl == lp.DownloadUrl;
+                FileName == lp.FileName;
         }
 
         // override object.GetHashCode
@@ -65,7 +65,7 @@ namespace POLiftWcfWebRole.ConfigurationHandlers
         {
             // TODO: write your implementation of GetHashCode() here
             return Title.GetHashCode() ^ Description.GetHashCode() ^
-                DownloadUrl.GetHashCode();
+                FileName.GetHashCode();
         }
 
         public static bool operator ==(LiftingProgramElement obj1,
@@ -83,7 +83,7 @@ namespace POLiftWcfWebRole.ConfigurationHandlers
 
             return obj1.Title == obj2.Title &&
                 obj1.Description == obj2.Description &&
-                obj1.DownloadUrl == obj2.DownloadUrl;
+                obj1.FileName == obj2.FileName;
         }
 
         public static bool operator !=(LiftingProgramElement obj1,

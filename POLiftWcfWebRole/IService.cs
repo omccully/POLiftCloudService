@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using POLiftWcfWebRole.Models;
+using System.IO;
 
 namespace POLiftWcfWebRole
 {
@@ -18,5 +19,8 @@ namespace POLiftWcfWebRole
 
         [OperationContract]
         TimeSpan TimeLeftInTrial(string deviceId);
+
+        [OperationContract]
+        Stream DownloadLiftingProgram(string fileName);
     }
 }

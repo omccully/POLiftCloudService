@@ -10,47 +10,25 @@ using System.Xml;
 namespace POLiftWcfWebRole.Models
 {
     [DataContract]
-    public class LiftingProgram : ConfigurationElement
+    public class LiftingProgram
     {
         [DataMember]
-        [ConfigurationProperty("title", IsRequired = true, IsKey = true)]
-        public string Title
-        {
-            get { return base["title"] as string; }
-            set { base["title"] = value; }
-        }
+        public string Title { get; set; }
 
         [DataMember]
-        [ConfigurationProperty("description", IsRequired = false)]
-        public string Description {
-            get { return base["description"] as string; }
-            set { base["description"] = value; }
-        }
+        public string Description { get; set; }
 
         [DataMember]
-        [ConfigurationProperty("downloadUrl", IsRequired = true)]
-        public string DownloadUrl {
-            get { return base["downloadUrl"] as string; }
-            set { base["downloadUrl"] = value; }
-        }
+        public string DownloadUrl { get; set; }
 
         public LiftingProgram()
         {
 
         }
 
-        
-
         // override object.Equals
         public override bool Equals(object obj)
         {
-            //       
-            // See the full list of guidelines at
-            //   http://go.microsoft.com/fwlink/?LinkID=85237  
-            // and also the guidance for operator== at
-            //   http://go.microsoft.com/fwlink/?LinkId=85238
-            //
-
             if (obj == null || GetType() != obj.GetType())
             {
                 return false;

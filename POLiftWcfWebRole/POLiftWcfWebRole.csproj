@@ -101,8 +101,9 @@
     <Compile Include="Database\DatabaseContext.cs" />
     <Compile Include="Models\DeviceRegistration.cs" />
     <Compile Include="Models\LiftingProgram.cs" />
-    <Compile Include="Models\LiftingProgramCollection.cs" />
-    <Compile Include="Models\LiftingProgramSection.cs" />
+    <Compile Include="ConfigurationHandlers\LiftingProgramCollection.cs" />
+    <Compile Include="ConfigurationHandlers\LiftingProgramElement.cs" />
+    <Compile Include="ConfigurationHandlers\LiftingProgramSection.cs" />
     <Compile Include="Models\RegistrationLookup.cs" />
     <Compile Include="Service.svc.cs">
       <DependentUpon>Service.svc</DependentUpon>

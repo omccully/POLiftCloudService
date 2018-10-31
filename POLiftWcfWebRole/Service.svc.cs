@@ -1,4 +1,5 @@
-﻿using POLiftWcfWebRole.Database;
+﻿using POLiftWcfWebRole.ConfigurationHandlers;
+using POLiftWcfWebRole.Database;
 using POLiftWcfWebRole.Models;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,28 @@ namespace POLiftWcfWebRole
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+
+#if DEBUG
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, 
+        IncludeExceptionDetailInFaults = true)]
+#else
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, 
+        IncludeExceptionDetailInFaults = false)]
+#endif
     public class Service : IService
     {
-        public DatabaseContext DatabaseContext { get; set; }
+        DatabaseContext _DatabaseContext;
+        public DatabaseContext DatabaseContext {
+            get
+            {
+                return _DatabaseContext ??
+                    (_DatabaseContext = new DatabaseContext("POLiftDatabase"));
+            }
+            set
+            {
+                _DatabaseContext = value;
+            }
+        }
 
         public Service()
         {
@@ -41,7 +60,8 @@ namespace POLiftWcfWebRole
         {
             object section = ConfigurationManager.GetSection("liftingPrograms");
             LiftingProgramSection lpsec = (LiftingProgramSection)section;
-            return lpsec.LiftingPrograms.Cast<LiftingProgram>().ToArray();
+            return lpsec.LiftingPrograms.Cast<LiftingProgramElement>()
+                .Select(lp => lp.ToLiftingProgram()).ToArray();
         }
 
         TimeSpan TrialPeriod = TimeSpan.FromDays(14);

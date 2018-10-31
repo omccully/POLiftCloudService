@@ -3,7 +3,7 @@
   <Role name="POLiftWcfWebRole">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=poliftcloudservice;AccountKey=$(_poliftcloudservice.key_)" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

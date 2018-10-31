@@ -4,9 +4,9 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 
-namespace POLiftWcfWebRole.Models
+namespace POLiftWcfWebRole.ConfigurationHandlers
 {
-    [ConfigurationCollection(typeof(LiftingProgram), 
+    [ConfigurationCollection(typeof(LiftingProgramElement), 
         AddItemName = "liftingProgram", 
         CollectionType = ConfigurationElementCollectionType.BasicMap)]
     public class LiftingProgramCollection : ConfigurationElementCollection
@@ -14,12 +14,12 @@ namespace POLiftWcfWebRole.Models
 
         protected override ConfigurationElement CreateNewElement()
         {
-            return new LiftingProgram();
+            return new LiftingProgramElement();
         }
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((LiftingProgram)element).Title;
+            return ((LiftingProgramElement)element).Title;
         }
 
         protected override string ElementName => "liftingProgram";
@@ -38,11 +38,11 @@ namespace POLiftWcfWebRole.Models
         public override ConfigurationElementCollectionType CollectionType => 
             ConfigurationElementCollectionType.BasicMap;
 
-        public LiftingProgram this[int index]
+        public LiftingProgramElement this[int index]
         {
             get
             {
-                return (LiftingProgram)BaseGet(index);
+                return (LiftingProgramElement)BaseGet(index);
             }
             set
             {
@@ -54,20 +54,20 @@ namespace POLiftWcfWebRole.Models
             }
         }
 
-        new public LiftingProgram this[string name]
+        new public LiftingProgramElement this[string name]
         {
             get
             {
-                return (LiftingProgram)BaseGet(name);
+                return (LiftingProgramElement)BaseGet(name);
             }
         }
 
-        public int IndexOf(LiftingProgram details)
+        public int IndexOf(LiftingProgramElement details)
         {
             return BaseIndexOf(details);
         }
 
-        public void Add(LiftingProgram details)
+        public void Add(LiftingProgramElement details)
         {
             BaseAdd(details);
         }
@@ -77,7 +77,7 @@ namespace POLiftWcfWebRole.Models
             BaseAdd(element, false);
         }
 
-        public void Remove(LiftingProgram details)
+        public void Remove(LiftingProgramElement details)
         {
             if (BaseIndexOf(details) >= 0)
                 BaseRemove(details.Title);

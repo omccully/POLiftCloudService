@@ -12,6 +12,8 @@ namespace POLiftWcfWebRole.Models
         [Key]
         public int Id { get; set; }
 
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(64)]
         [Index(IsUnique = true)]
         public string DeviceId { get; set; }
 
